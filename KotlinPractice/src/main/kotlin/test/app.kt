@@ -8,7 +8,7 @@ fun main(args: Array<String>) {
     println ("Hello World! from $name")
     val maxVal = max(1, 5)
     println ("Max 1 and 5 is $maxVal")
-    val p = Person("test")
+    val p = Person("test", 21)
     println (p.name)
     val r = Rectangle(10, 10)
     println (r.isSquare)
