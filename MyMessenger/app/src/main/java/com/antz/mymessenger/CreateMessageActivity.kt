@@ -19,14 +19,13 @@ class CreateMessageActivity : Activity() {
 
     fun onSendMessage(view : View) {
         val findViewById = findViewById<EditText>(R.id.messageRead)
-        val intent = Intent(this, ReceiveMessageActivity::class.java)
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.setType("text/plain")
+        intent.putExtra(Intent.EXTRA_TEXT, findViewById.text.toString())
 
-        println ("FindView $findViewById")
-        intent.putExtra(
-                ReceiveMessageActivity.EXTRA_MESSAGE,
-                findViewById.text.toString()
-        )
+        val chooserString = getString(R.string.chooser)
+        val chosenIntent = Intent.createChooser(intent, chooserString)
 
-        startActivity(intent)
+        startActivity(chosenIntent)
     }
 }
