@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MyLayouts</string>
+    <string name="it_s_a_duck">It\'s a duck</string>
+    <string name="not_a_real_one">not a real one</string>
+</resources>
