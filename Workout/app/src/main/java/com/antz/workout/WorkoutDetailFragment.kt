@@ -9,10 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val WORKOUT_ID = "workoutId"
 
 /**
  * A simple [Fragment] subclass.
@@ -38,6 +35,17 @@ class WorkoutDetailFragment : Fragment() {
             val workout = workouts[workoutId ?: 0]
             textTitle.setText(workout.name)
             textDescription.setText(workout.description)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(WORKOUT_ID, workoutId ?: 0)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        savedInstanceState?.let {
+            workoutId = savedInstanceState.getInt(WORKOUT_ID)
         }
     }
 }

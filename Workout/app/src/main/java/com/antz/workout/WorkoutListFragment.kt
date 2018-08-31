@@ -11,12 +11,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 /**
  * A simple [Fragment] subclass.
  *
@@ -29,7 +23,7 @@ class WorkoutListFragment : ListFragment() {
         val toTypedArray = workouts.map { it.name }.toTypedArray()
 
         val arrayAdapter = ArrayAdapter(inflater.context, android.R.layout.simple_list_item_1, toTypedArray)
-        setListAdapter(arrayAdapter)
+        listAdapter = arrayAdapter
 
         // Inflate the layout for this fragment
         return super.onCreateView(inflater, container, savedInstanceState)

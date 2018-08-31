@@ -3,5 +3,5 @@
     <string name="details_button">Show Details</string>
     <string name="workout_title">Title</string>
     <string name="workout_description">Description</string>
-    <string name="selected_configuration">Normal</string>
+    <string name="selected_configuration">Large</string>
 </resources>
