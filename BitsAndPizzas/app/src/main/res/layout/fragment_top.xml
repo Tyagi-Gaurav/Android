@@ -4,14 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context="com.antz.bitsandpizzas.TopFragment">
 
-    <include layout="@layout/toolbar_main"
-        android:id="@+id/toolbar"/>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/view_pager"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:text="@string/title_top" />
 
 </LinearLayout>
