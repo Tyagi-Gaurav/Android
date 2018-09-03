@@ -3,6 +3,7 @@ package com.antz.workout
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentTransaction
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,17 @@ class WorkoutDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (savedInstanceState == null) {
+            val stopWatchFragment = StopWatchFragment()
+            val fragmentTransaction = childFragmentManager.beginTransaction()
+
+            fragmentTransaction.add(R.id.stopwatch_container, stopWatchFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            fragmentTransaction.commit()
+        }
+
         savedInstanceState?.let {
             workoutId = savedInstanceState.getInt(WORKOUT_ID)
         }
