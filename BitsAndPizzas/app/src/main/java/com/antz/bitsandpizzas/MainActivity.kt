@@ -1,7 +1,9 @@
 package com.antz.bitsandpizzas
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -22,9 +24,12 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val sectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
+        val sectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager, baseContext)
         val viewPager = findViewById<ViewPager>(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
+
+        val tabLayout = findViewById<TabLayout>(R.id.tabs)
+        tabLayout.setupWithViewPager(viewPager)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -40,7 +45,6 @@ class MainActivity : AppCompatActivity() {
         intent.setType("text/plain")
         intent.putExtra(Intent.EXTRA_TEXT, text)
         actionProvider.setShareIntent(intent)
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -54,17 +58,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    class SectionsPagerAdapter(fm : FragmentManager) : FragmentPagerAdapter(fm) {
+    class SectionsPagerAdapter(fm : FragmentManager, val context: Context) : FragmentPagerAdapter(fm) {
         override fun getItem(p0: Int): Fragment {
             Log.i("SectionPagerAdapter", "Requested position $p0")
-            when (p0) {
-                0 -> return TopFragment()
-                1 -> return PizzaFragment()
-                2 -> return PastaFragment()
-                else -> return StoresFragment()
+            return when (p0) {
+                0 -> TopFragment()
+                1 -> PizzaFragment()
+                2 -> PastaFragment()
+                else -> StoresFragment()
             }
         }
 
         override fun getCount(): Int = 4
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            return when(position) {
+                0 -> context.resources.getString(R.string.home_tab)
+                1 -> context.resources.getString(R.string.pizza_tab)
+                2 -> context.resources.getString(R.string.pasta_tab)
+                else -> context.resources.getString(R.string.store_tab)
+            }
+        }
     }
 }
