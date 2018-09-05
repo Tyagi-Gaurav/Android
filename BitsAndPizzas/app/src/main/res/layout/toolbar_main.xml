@@ -4,4 +4,14 @@
     android:layout_height="?attr/actionBarSize"
     android:background="@color/colorPrimary"
     android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:layout_scrollFlags="scroll|enterAlways"
+    xmlns:app="http://schemas.android.com/apk/res-auto" />
+
+<!--
+The scroll value allows the view to scroll off the top of screen. Without this, the toolbar would
+stay pinned to the top of the screen. The enterAlways value means that the toolbar quickly scrolls
+down to its original position when the user scrolls the corresponding view.
+
+The toolbar will still scroll down without this value, but it will be slower.
+-->
