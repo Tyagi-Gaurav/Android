@@ -34,4 +34,6 @@
         We believe that good food is best enjoyed while staring
         at your phone.
     </string>
+    <string name="order_details_hint">Please enter your order</string>
+    <string name="order_name_hint">Please enter your name</string>
 </resources>
