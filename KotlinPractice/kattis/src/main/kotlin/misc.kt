@@ -3,22 +3,26 @@ import java.util.*
 fun main(args: Array<String>) {
     val scanner = Scanner(System.`in`)
 
-    val n = scanner.nextInt()
-    val T = scanner.nextInt()
+    val input = mutableListOf<Int>()
 
-    var sum = 0
-    var count = 0
-
-    for (i in 1..n) {
-        val x = scanner.nextInt()
-
-        if (sum + x <= T) {
-            count ++
-            sum += x
-        } else {
-            break
-        }
+    for (i in 1..9) {
+        input.add(scanner.nextInt())
     }
 
-    println (count)
+    val pairs = findPairs(input)
+    val sum = input.sum()
+    val findFirst = pairs.stream().filter { x -> sum - x.first - x.second == 100 }
+            .findFirst().get()
+
+    input.forEach { if (it != findFirst.first && it != findFirst.second) println(it)}
+}
+
+fun findPairs(input: MutableList<Int>): List<Pair<Int, Int>> {
+    val mutableListOf = mutableListOf<Pair<Int, Int>>()
+    for (i in 0 until input.size - 1) {
+        for (j in i+1 until input.size) {
+            mutableListOf.add(Pair(input[i], input[j]))
+        }
+    }
+    return mutableListOf
 }
