@@ -40,13 +40,11 @@ class DelayedMessageService : IntentService(SERVICE_NAME) {
     private fun showText(message: String?) {
         Log.v(SERVICE_NAME, "Starting to send notification")
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel("default",
                     "Channel name", NotificationManager.IMPORTANCE_DEFAULT)
             channel.description = "Channel description"
             notificationManager.createNotificationChannel(channel)
-        } else {
-            "default"
         }
         val notificationCompatBuilder = NotificationCompat.Builder(this, "default")
                 .setSmallIcon(android.R.drawable.sym_def_app_icon)
