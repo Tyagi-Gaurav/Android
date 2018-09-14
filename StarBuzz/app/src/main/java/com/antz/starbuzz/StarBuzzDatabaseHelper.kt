@@ -4,9 +4,10 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 val DB_NAME = "starbuzz"
-val DB_VERSION = 2
+val DB_VERSION = 3
 
 val TABLE_CREATE = "CREATE TABLE DRINK " +
                    "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -26,6 +27,7 @@ class StarBuzzDatabaseHelper(context: Context?) :
     }
 
     private fun updateMyDatabase(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+        Log.i("Database Upgrade/Create", "oldVersion $oldVersion, newVersion $newVersion")
         if (oldVersion < 2) {
                     db?.execSQL(TABLE_CREATE)
         insertDrink(db, "Latte",
@@ -37,7 +39,7 @@ class StarBuzzDatabaseHelper(context: Context?) :
                 R.drawable.filter)
         }
 
-        if (oldVersion == 2) {
+        if (newVersion == DB_VERSION) {
             db?.execSQL("ALTER TABLE DRINK ADD COLUMN FAVORITE NUMERIC;")
         }
     }
