@@ -1,6 +1,5 @@
 package com.antz.mycalendar
 
-
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -18,7 +17,7 @@ import java.util.*
  */
 class MonthFragment : Fragment() {
 
-    val calendarGenerator = CalendarGenerator()
+    private val calendarGenerator = CalendarGenerator()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -42,7 +41,31 @@ class MonthFragment : Fragment() {
         return monthView
     }
 
-    fun generateWeekDayTitles(weekDays: List<String>) : LinearLayout {
+    private fun generateWeekDayTitles(weekDays: List<String>) : LinearLayout {
+        val linearLayout = createLinearLayout()
+
+        for (i in 1..7) {
+            linearLayout.addView(createTextView(weekDays[i-1]))
+        }
+        return linearLayout
+    }
+
+    private fun generateDaysLinearLayout(days: List<Day>) : List<LinearLayout> {
+        val linearLayoutList = mutableListOf<LinearLayout>()
+        var index = 0
+
+        for (ll in 1..days.size / 7) {
+            val linearLayout = createLinearLayout()
+            for (i in 1..7) {
+                linearLayout.addView(createTextView(days[index++].date.toString()))
+            }
+            linearLayoutList.add(linearLayout)
+        }
+
+        return linearLayoutList
+    }
+
+    private fun createLinearLayout(): LinearLayout {
         val linearLayout = LinearLayout(this.context)
         val linearLayoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -52,55 +75,20 @@ class MonthFragment : Fragment() {
         linearLayoutParams.marginStart = 20
         linearLayout.layoutParams = linearLayoutParams
         linearLayout.orientation = HORIZONTAL
-
-        for (i in 1..7) {
-            val textView = TextView(this.context)
-            textView.text = weekDays[i-1]
-            val layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    1.0F
-            )
-            textView.textSize = 20.0F
-            textView.setTextColor(Color.BLACK)
-            textView.layoutParams = layoutParams
-            linearLayout.addView(textView)
-        }
         return linearLayout
     }
 
-    fun generateDaysLinearLayout(days: List<Day>) : List<LinearLayout> {
-        val linearLayoutList = mutableListOf<LinearLayout>()
-        var index = 0
-
-        for (ll in 1..days.size / 7) {
-            val linearLayout = LinearLayout(this.context)
-            val linearLayoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    1.0F
-            )
-            linearLayoutParams.marginStart = 20
-            linearLayout.layoutParams = linearLayoutParams
-            linearLayout.orientation = HORIZONTAL
-
-            for (i in 1..7) {
-                val textView = TextView(this.context)
-                textView.text = days[index++].date.toString()
-                val layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        1.0F
-                )
-                textView.textSize = 20.0F
-                textView.setTextColor(Color.BLACK)
-                textView.layoutParams = layoutParams
-                linearLayout.addView(textView)
-            }
-
-            linearLayoutList.add(linearLayout)
-        }
-
-        return linearLayoutList
+    private fun createTextView(value : String) : TextView {
+        val textView = TextView(this.context)
+        textView.text = value
+        val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1.0F
+        )
+        textView.textSize = 20.0F
+        textView.setTextColor(Color.BLACK)
+        textView.layoutParams = layoutParams
+        return textView
     }
 }
