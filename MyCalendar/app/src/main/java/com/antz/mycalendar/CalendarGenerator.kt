@@ -11,7 +11,7 @@ class CalendarGenerator {
 
         for (i in 1..numberOfDays) {
             calendar.set(year, month, i)
-            dayList.add(Day(calendar.get(Calendar.DAY_OF_WEEK), i))
+            dayList.add(Day(calendar.get(Calendar.DAY_OF_WEEK), i, true))
         }
 
         for (i in (dayList[0].dayOfWeek - 1) downTo 1) {
@@ -32,11 +32,11 @@ class CalendarGenerator {
         return beforeDaysList
     }
 
-    fun getNumberOfDaysIn(month: Int, year : Int) : Int {
+    private fun getNumberOfDaysIn(month: Int, year : Int) : Int {
         val instance = GregorianCalendar.getInstance()
         instance.set(year, month, 1)
         return instance.getActualMaximum(Calendar.DAY_OF_MONTH)
     }
 }
 
-data class Day(val dayOfWeek: Int, val date : Int)
+data class Day(val dayOfWeek: Int, val date : Int, val inMonth : Boolean = false)
