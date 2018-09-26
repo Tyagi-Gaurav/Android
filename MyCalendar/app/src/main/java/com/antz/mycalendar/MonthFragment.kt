@@ -18,7 +18,6 @@ import java.util.*
  *
  */
 class MonthFragment : Fragment() {
-
     private val calendarGenerator = CalendarGenerator()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +46,7 @@ class MonthFragment : Fragment() {
         val linearLayout = createLinearLayout()
 
         for (i in 1..7) {
-            linearLayout.addView(createTextView(weekDays[i-1]))
+            linearLayout.addView(createTextView(weekDays[i-1], Color.BLUE))
         }
         return linearLayout
     }
