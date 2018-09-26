@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    class SectionsPagerAdapter(fm : FragmentManager, val context: Context) : FragmentPagerAdapter(fm) {
+    class SectionsPagerAdapter(fm : FragmentManager, private val context: Context) : FragmentPagerAdapter(fm) {
         override fun getItem(p0: Int): Fragment {
             Log.i("SectionPagerAdapter", "Requested position $p0")
             return when (p0) {
