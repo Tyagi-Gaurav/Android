@@ -8,10 +8,15 @@ class CalendarGenerator {
         val calendar = GregorianCalendar.getInstance(Locale.getDefault())
         val dayList = mutableListOf<Day>()
         val beforeDaysList = mutableListOf<Day>()
+        val today = calendar.get(Calendar.DATE)
 
         for (i in 1..numberOfDays) {
             calendar.set(year, month, i)
-            dayList.add(Day(calendar.get(Calendar.DAY_OF_WEEK), i, true))
+            if (i == today)
+                dayList.add(Day(calendar.get(Calendar.DAY_OF_WEEK), i, true, true))
+            else
+                dayList.add(Day(calendar.get(Calendar.DAY_OF_WEEK), i, true))
+
         }
 
         for (i in (dayList[0].dayOfWeek - 1) downTo 1) {
@@ -39,4 +44,7 @@ class CalendarGenerator {
     }
 }
 
-data class Day(val dayOfWeek: Int, val date : Int, val inMonth : Boolean = false)
+data class Day(val dayOfWeek: Int,
+               val date : Int,
+               val inMonth : Boolean = false,
+               val isToday : Boolean = false)

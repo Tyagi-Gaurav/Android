@@ -2,6 +2,7 @@ package com.antz.mycalendar
 
 import android.graphics.Color
 import android.graphics.Color.BLACK
+import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -59,8 +60,8 @@ class MonthFragment : Fragment() {
             val linearLayout = createLinearLayout()
             for (i in 1..7) {
                 val day = days[index++]
-                linearLayout.addView(createTextView(day.date.toString(),
-                        if (day.inMonth) Color.BLACK else Color.GRAY))
+                val color = if (day.inMonth) Color.BLACK else Color.GRAY
+                linearLayout.addView(createTextView(day.date.toString(), color, day.isToday))
             }
             linearLayoutList.add(linearLayout)
         }
@@ -81,7 +82,7 @@ class MonthFragment : Fragment() {
         return linearLayout
     }
 
-    private fun createTextView(value : String, color : Int = BLACK) : TextView {
+    private fun createTextView(value: String, color: Int = BLACK, today: Boolean = false) : TextView {
         val textView = TextView(this.context)
         textView.text = value
         val layoutParams = LinearLayout.LayoutParams(
@@ -89,8 +90,13 @@ class MonthFragment : Fragment() {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 1.0F
         )
-        textView.textSize = 20.0F
         textView.setTextColor(color)
+        if (today) {
+            textView.setTextColor(Color.RED)
+            textView.setTypeface(null, Typeface.BOLD_ITALIC)
+        }
+
+        textView.textSize = 20.0F
         textView.layoutParams = layoutParams
         return textView
     }
