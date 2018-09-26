@@ -6,4 +6,3 @@
     android:background="@color/colorPrimary"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     app:layout_scrollFlags="scroll|enterAlways"/>
-
