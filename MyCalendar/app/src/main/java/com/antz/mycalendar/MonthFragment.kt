@@ -18,14 +18,18 @@ import java.util.*
  *
  */
 class MonthFragment : Fragment() {
-    private val calendarGenerator = CalendarGenerator()
+    var month : Int = 0
+    var year : Int = 0
+
+    init {
+        month = Calendar.getInstance().get(Calendar.MONTH)
+        year = Calendar.getInstance().get(Calendar.YEAR)
+    }
+    private val calendarGenerator: CalendarGenerator = CalendarGenerator()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val monthView = inflater.inflate(R.layout.fragment_month, container, false)
-
-        val month = Calendar.getInstance().get(Calendar.MONTH)
-        val year = Calendar.getInstance().get(Calendar.YEAR)
         val monthString = resources.getStringArray(R.array.monthsList)[month]
         val displayString = "$monthString, $year"
         val monthTitleView = monthView.findViewById<TextView>(R.id.month_title)
@@ -98,5 +102,17 @@ class MonthFragment : Fragment() {
         textView.textSize = 20.0F
         textView.layoutParams = layoutParams
         return textView
+    }
+
+    fun incrementMonthAndYear() {
+        val nextMonthAndYear = calendarGenerator.getNextMonthAndYear(month, year)
+        month = nextMonthAndYear.first
+        year = nextMonthAndYear.second
+    }
+
+    fun decrementMonthAndYear() {
+        val nextMonthAndYear = calendarGenerator.getPreviousMonthAndYear(month, year)
+        month = nextMonthAndYear.first
+        year = nextMonthAndYear.second
     }
 }

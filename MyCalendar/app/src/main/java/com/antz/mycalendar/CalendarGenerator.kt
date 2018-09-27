@@ -4,15 +4,17 @@ import java.util.*
 
 class CalendarGenerator {
     fun generateDays(month : Int, year : Int) : MutableList<Day> {
-        val numberOfDays = getNumberOfDaysIn(month, year)
         val calendar = GregorianCalendar.getInstance(Locale.getDefault())
         val dayList = mutableListOf<Day>()
         val beforeDaysList = mutableListOf<Day>()
-        val today = calendar.get(Calendar.DATE)
+        val todayDate = calendar.get(Calendar.DATE)
+        val todayMonth = calendar.get(Calendar.MONTH)
+        val todayYear = calendar.get(Calendar.YEAR)
+        val numberOfDays = getNumberOfDaysIn(month, year)
 
         for (i in 1..numberOfDays) {
             calendar.set(year, month, i)
-            if (i == today)
+            if (i == todayDate && month == todayMonth && year == todayYear)
                 dayList.add(Day(calendar.get(Calendar.DAY_OF_WEEK), i, true, true))
             else
                 dayList.add(Day(calendar.get(Calendar.DAY_OF_WEEK), i, true))
@@ -41,6 +43,20 @@ class CalendarGenerator {
         val instance = GregorianCalendar.getInstance()
         instance.set(year, month, 1)
         return instance.getActualMaximum(Calendar.DAY_OF_MONTH)
+    }
+
+    fun getNextMonthAndYear(month: Int, year : Int) : Pair<Int, Int> {
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(year, month, 1)
+        calendar.add(Calendar.MONTH, 1)
+        return Pair(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR))
+    }
+
+    fun getPreviousMonthAndYear(month: Int, year : Int) : Pair<Int, Int> {
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(year, month, 1)
+        calendar.add(Calendar.MONTH, -1)
+        return Pair(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR))
     }
 }
 
