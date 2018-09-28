@@ -12,13 +12,18 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mGestureDetector: GestureDetectorCompat
-    private var month = Calendar.getInstance().get(Calendar.MONTH)
-    private var year = Calendar.getInstance().get(Calendar.YEAR)
+    private lateinit var instance : ViewModelProvider.AndroidViewModelFactory
+    private lateinit var calendarModel: CalendarModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mGestureDetector = GestureDetectorCompat(this, MyGestureListener())
+        instance = ViewModelProvider.AndroidViewModelFactory.getInstance(this.application)
+        val viewModelProvider = ViewModelProvider(this, instance)
+        calendarModel = viewModelProvider.get(CalendarModel::class.java)
+        calendarModel.year = Calendar.getInstance().get(Calendar.YEAR)
+        calendarModel.month = Calendar.getInstance().get(Calendar.MONTH)
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -32,24 +37,14 @@ class MainActivity : AppCompatActivity() {
             if (Math.abs(delta) > MIN_DISTANCE) {
                 if (e2.x > e1.x) {
                     Log.d("MyMainActivity", "left2right swipe")
-                    val monthFragment = MonthFragment()
-                    monthFragment.year = year
-                    monthFragment.month = month
-                    monthFragment.decrementMonthAndYear()
-                    year = monthFragment.year
-                    month = monthFragment.month
-                    openNewMonthFragment(monthFragment)
-                    Log.d("MyMainActivity", "${monthFragment.month}, ${monthFragment.year}")
+                    calendarModel.decrementMonthAndYear()
+                    openNewMonthFragment(MonthFragment())
+                    Log.d("MyMainActivity", "${calendarModel.month}, ${calendarModel.year}")
                 } else {
                     Log.d("MyMainActivity", "right2left swipe")
-                    val monthFragment = MonthFragment()
-                    monthFragment.year = year
-                    monthFragment.month = month
-                    monthFragment.incrementMonthAndYear()
-                    year = monthFragment.year
-                    month = monthFragment.month
-                    openNewMonthFragment(monthFragment)
-                    Log.d("MyMainActivity", "${monthFragment.month}, ${monthFragment.year}")
+                    calendarModel.incrementMonthAndYear()
+                    openNewMonthFragment(MonthFragment())
+                    Log.d("MyMainActivity", "${calendarModel.month}, ${calendarModel.year}")
                 }
             }
             return true

@@ -1,47 +1,50 @@
 package com.antz.mycalendar
 
+import android.arch.lifecycle.ViewModelProvider
 import android.graphics.Color
 import android.graphics.Color.BLACK
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.TextView
-import java.util.*
 
 /**
  * A simple [Fragment] subclass.
  *
  */
 class MonthFragment : Fragment() {
-    var month : Int = 0
-    var year : Int = 0
+    private lateinit var instance : ViewModelProvider.AndroidViewModelFactory
+    private lateinit var calendarModel: CalendarModel
 
-    init {
-        month = Calendar.getInstance().get(Calendar.MONTH)
-        year = Calendar.getInstance().get(Calendar.YEAR)
-    }
     private val calendarGenerator: CalendarGenerator = CalendarGenerator()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        instance = ViewModelProvider.AndroidViewModelFactory(this.activity?.application!!)
+        val viewModelProvider = ViewModelProvider(this.activity!!, instance)
+        calendarModel = viewModelProvider.get(CalendarModel::class.java)
+
         val monthView = inflater.inflate(R.layout.fragment_month, container, false)
-        val monthString = resources.getStringArray(R.array.monthsList)[month]
-        val displayString = "$monthString, $year"
+        val monthString = resources.getStringArray(R.array.monthsList)[calendarModel.month]
+        val displayString = "$monthString, ${calendarModel.year}"
         val monthTitleView = monthView.findViewById<TextView>(R.id.month_title)
         monthTitleView.text = displayString
         val monthDetailLayout = monthView.findViewById<TextView>(R.id.month_detail_layout) as LinearLayout
         val weekDays= listOf("S", "M", "T", "W", "T", "F", "S")
 
-        val listOfDays = calendarGenerator.generateDays(month, year)
+        val listOfDays = calendarGenerator.generateDays(calendarModel.month, calendarModel.year)
 
         monthDetailLayout.addView(generateWeekDayTitles(weekDays))
         val generateDaysLinearLayout = generateDaysLinearLayout(listOfDays)
         generateDaysLinearLayout.forEach{monthDetailLayout.addView(it)}
+
+        Log.d("Calendar", "${calendarModel.month}, ${calendarModel.year}")
 
         return monthView
     }
@@ -102,17 +105,5 @@ class MonthFragment : Fragment() {
         textView.textSize = 20.0F
         textView.layoutParams = layoutParams
         return textView
-    }
-
-    fun incrementMonthAndYear() {
-        val nextMonthAndYear = calendarGenerator.getNextMonthAndYear(month, year)
-        month = nextMonthAndYear.first
-        year = nextMonthAndYear.second
-    }
-
-    fun decrementMonthAndYear() {
-        val nextMonthAndYear = calendarGenerator.getPreviousMonthAndYear(month, year)
-        month = nextMonthAndYear.first
-        year = nextMonthAndYear.second
     }
 }

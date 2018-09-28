@@ -44,20 +44,6 @@ class CalendarGenerator {
         instance.set(year, month, 1)
         return instance.getActualMaximum(Calendar.DAY_OF_MONTH)
     }
-
-    fun getNextMonthAndYear(month: Int, year : Int) : Pair<Int, Int> {
-        val calendar = GregorianCalendar.getInstance()
-        calendar.set(year, month, 1)
-        calendar.add(Calendar.MONTH, 1)
-        return Pair(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR))
-    }
-
-    fun getPreviousMonthAndYear(month: Int, year : Int) : Pair<Int, Int> {
-        val calendar = GregorianCalendar.getInstance()
-        calendar.set(year, month, 1)
-        calendar.add(Calendar.MONTH, -1)
-        return Pair(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR))
-    }
 }
 
 data class Day(val dayOfWeek: Int,
