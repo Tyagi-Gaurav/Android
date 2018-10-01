@@ -11,14 +11,14 @@ class CalendarModel : ViewModel() {
         return "Month: $month, Year: $year"
     }
 
-    fun getNextMonthAndYear(month: Int, year : Int) : Pair<Int, Int> {
+    private fun getNextMonthAndYear(month: Int, year : Int) : Pair<Int, Int> {
         val calendar = GregorianCalendar.getInstance()
         calendar.set(year, month, 1)
         calendar.add(Calendar.MONTH, 1)
         return Pair(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR))
     }
 
-    fun getPreviousMonthAndYear(month: Int, year : Int) : Pair<Int, Int> {
+    private fun getPreviousMonthAndYear(month: Int, year : Int) : Pair<Int, Int> {
         val calendar = GregorianCalendar.getInstance()
         calendar.set(year, month, 1)
         calendar.add(Calendar.MONTH, -1)
