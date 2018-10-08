@@ -78,6 +78,22 @@ class CalendarTest {
         onView(allOf(withId(R.id.month_title),
                 withText("$monthString, $year")))
                 .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
 
+    @Test
+    fun onViewShouldDisplayAllDaysOfTheMonth() {
+        //given
+        val calendar = Calendar.getInstance()
+        calendar.time = Date()
+        val monthString = SimpleDateFormat("MMMM").format(calendar.time)
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+
+        //then
+        for (i in 1..calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+            val id = (((year * 100) + month) * 100) + i
+            onView(withId(id))
+                    .check(matches(withText(containsString("$i"))))
+        }
     }
 }

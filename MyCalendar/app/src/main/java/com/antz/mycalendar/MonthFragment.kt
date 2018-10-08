@@ -67,7 +67,8 @@ class MonthFragment : Fragment() {
             for (i in 1..7) {
                 val day = days[index++]
                 val color = if (day.inMonth) Color.BLACK else Color.GRAY
-                linearLayout.addView(createTextView(day.date.toString(), color, day.isToday))
+                val id = (((day.year * 100) + day.month) * 100) + day.date
+                linearLayout.addView(createTextView(day.date.toString(), color, day.isToday, id))
             }
             linearLayoutList.add(linearLayout)
         }
@@ -88,9 +89,13 @@ class MonthFragment : Fragment() {
         return linearLayout
     }
 
-    private fun createTextView(value: String, color: Int = BLACK, today: Boolean = false) : TextView {
+    private fun createTextView(value: String,
+                               color: Int = BLACK,
+                               today: Boolean = false,
+                               id: Int = 1) : TextView {
         val textView = TextView(this.context)
         textView.text = value
+        textView.id = id
         val layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,

@@ -15,23 +15,21 @@ class CalendarGenerator {
         for (i in 1..numberOfDays) {
             calendar.set(year, month, i)
             if (i == todayDate && month == todayMonth && year == todayYear)
-                dayList.add(Day(calendar.get(Calendar.DAY_OF_WEEK), i, true, true))
+                dayList.add(Day.from(calendar, true, true))
             else
-                dayList.add(Day(calendar.get(Calendar.DAY_OF_WEEK), i, true))
+                dayList.add(Day.from(calendar, true))
         }
 
         for (i in (dayList[0].dayOfWeek - 1) downTo 1) {
             calendar.set(year, month, dayList[0].date)
             calendar.add(Calendar.DAY_OF_MONTH, -i)
-            beforeDaysList.add(Day(calendar.get(Calendar.DAY_OF_WEEK),
-                    calendar.get(Calendar.DAY_OF_MONTH)))
+            beforeDaysList.add(Day.from(calendar))
         }
 
         for (i in 1..(7 - dayList[numberOfDays - 1].dayOfWeek)) {
             calendar.set(year, month, dayList[numberOfDays - 1].date)
             calendar.add(Calendar.DAY_OF_MONTH, i)
-            dayList.add(Day(calendar.get(Calendar.DAY_OF_WEEK),
-                    calendar.get(Calendar.DAY_OF_MONTH)))
+            dayList.add(Day.from(calendar))
         }
 
         beforeDaysList.addAll(dayList)
@@ -47,5 +45,20 @@ class CalendarGenerator {
 
 data class Day(val dayOfWeek: Int,
                val date : Int,
-               val inMonth : Boolean = false,
-               val isToday : Boolean = false)
+               val month : Int,
+               val year : Int,
+               val inMonth : Boolean,
+               val isToday : Boolean) {
+
+    companion object {
+        fun from(calendar : Calendar,
+                 inMonth : Boolean = false,
+                 isToday : Boolean = false) : Day = Day(
+                calendar.get(Calendar.DAY_OF_WEEK),
+                calendar.get(Calendar.DAY_OF_MONTH),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.YEAR),
+                inMonth,
+                isToday)
+    }
+}
