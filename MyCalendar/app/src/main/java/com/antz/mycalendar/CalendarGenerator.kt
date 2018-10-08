@@ -18,7 +18,6 @@ class CalendarGenerator {
                 dayList.add(Day(calendar.get(Calendar.DAY_OF_WEEK), i, true, true))
             else
                 dayList.add(Day(calendar.get(Calendar.DAY_OF_WEEK), i, true))
-
         }
 
         for (i in (dayList[0].dayOfWeek - 1) downTo 1) {
