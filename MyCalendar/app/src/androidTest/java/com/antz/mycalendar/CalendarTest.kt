@@ -1,5 +1,7 @@
 package com.antz.mycalendar
 
+import android.content.pm.PackageManager
+import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.swipeLeft
 import android.support.test.espresso.action.ViewActions.swipeRight
@@ -9,6 +11,9 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
+import org.hamcrest.core.IsEqual
+import org.hamcrest.core.IsNot
+import org.hamcrest.core.IsNull
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -95,5 +100,18 @@ class CalendarTest {
             onView(withId(id))
                     .check(matches(withText(containsString("$i"))))
         }
+    }
+
+    @Test
+    fun shouldHavePermissionsToViewCalendar() {
+        //given
+        val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
+
+        //when
+        val packageInfo = targetContext.packageManager.getPackageInfo("com.antz.mycalendar", PackageManager.GET_PERMISSIONS)
+
+        //then
+        assertThat(packageInfo.requestedPermissions, IsNot(IsNull()))
+        assertThat(packageInfo.requestedPermissions, IsEqual(arrayOf("android.permission.READ_CALENDAR")))
     }
 }
