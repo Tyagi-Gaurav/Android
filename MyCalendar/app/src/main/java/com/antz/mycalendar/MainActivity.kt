@@ -7,7 +7,9 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.GestureDetector
 import android.view.Menu
+import android.view.MenuItem
 import android.view.MotionEvent
+import android.widget.Toast
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -34,6 +36,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            R.id.sync -> {
+                val makeText = Toast.makeText(this, "Syncing calendar events", Toast.LENGTH_SHORT)
+                makeText.show()≠
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
