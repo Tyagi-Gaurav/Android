@@ -2,6 +2,7 @@ package com.antz.mycalendar
 
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.view.GestureDetectorCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -9,6 +10,7 @@ import android.view.GestureDetector
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
+import android.widget.TextView
 import android.widget.Toast
 import java.util.*
 
@@ -17,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mGestureDetector: GestureDetectorCompat
     private lateinit var instance: ViewModelProvider.AndroidViewModelFactory
     private lateinit var calendarModel: CalendarModel
+    val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +44,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
             R.id.sync -> {
-                val makeText = Toast.makeText(this, "Syncing calendar events", Toast.LENGTH_SHORT)
-                makeText.show()≠
+                handler.post(calendarSyncer)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -79,6 +81,13 @@ class MainActivity : AppCompatActivity() {
         transaction.replace(R.id.monthFragment, monthFragment)
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    val calendarSyncer : Runnable = Runnable {
+        handler.post{
+            val makeText = Toast.makeText(this, "Syncing calendar events", Toast.LENGTH_SHORT)
+            makeText.show()
+        }
     }
 
     companion object {
