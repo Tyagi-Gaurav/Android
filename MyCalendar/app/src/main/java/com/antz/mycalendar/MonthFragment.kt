@@ -30,7 +30,7 @@ class MonthFragment : Fragment() {
         val viewModelProvider = ViewModelProvider(this.activity!!, instance)
         calendarModel = viewModelProvider.get(CalendarModel::class.java)
 
-        val monthView = inflater.inflate(R.layout.fragment_month, container, false)
+        val monthView = inflater.inflate(R.layout.fragment_month_detail, container, false)
         val monthString = resources.getStringArray(R.array.monthsList)[calendarModel.month]
         val displayString = "$monthString, ${calendarModel.year}"
         val monthTitleView = monthView.findViewById<TextView>(R.id.month_title)

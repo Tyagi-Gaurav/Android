@@ -12,7 +12,7 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mGestureDetector: GestureDetectorCompat
-    private lateinit var instance : ViewModelProvider.AndroidViewModelFactory
+    private lateinit var instance: ViewModelProvider.AndroidViewModelFactory
     private lateinit var calendarModel: CalendarModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +24,13 @@ class MainActivity : AppCompatActivity() {
         calendarModel = viewModelProvider.get(CalendarModel::class.java)
         calendarModel.year = Calendar.getInstance().get(Calendar.YEAR)
         calendarModel.month = Calendar.getInstance().get(Calendar.MONTH)
+
+        supportActionBar?.let {
+            it.setDisplayShowHomeEnabled(true)
+            it.setDisplayUseLogoEnabled(true)
+            it.title = "Month"
+            it.show()
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -51,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun openNewMonthFragment(monthFragment : MonthFragment) {
+    fun openNewMonthFragment(monthFragment: MonthFragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.monthFragment, monthFragment)
         transaction.addToBackStack(null)
@@ -62,3 +69,5 @@ class MainActivity : AppCompatActivity() {
         private const val MIN_DISTANCE: Float = 150.0F
     }
 }
+
+
