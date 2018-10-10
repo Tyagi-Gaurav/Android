@@ -6,6 +6,7 @@ import android.support.v4.view.GestureDetectorCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.GestureDetector
+import android.view.Menu
 import android.view.MotionEvent
 import java.util.*
 
@@ -25,12 +26,14 @@ class MainActivity : AppCompatActivity() {
         calendarModel.year = Calendar.getInstance().get(Calendar.YEAR)
         calendarModel.month = Calendar.getInstance().get(Calendar.MONTH)
 
-        supportActionBar?.let {
-            it.setDisplayShowHomeEnabled(true)
-            it.setDisplayUseLogoEnabled(true)
-            it.title = "Month"
-            it.show()
-        }
+        setSupportActionBar(findViewById(R.id.my_toolbar))
+
+        Log.d("MainActivity", "Support Action Bar is $supportActionBar")
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
