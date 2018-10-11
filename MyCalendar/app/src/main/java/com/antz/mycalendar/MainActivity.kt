@@ -1,8 +1,11 @@
 package com.antz.mycalendar
 
 import android.arch.lifecycle.ViewModelProvider
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.GestureDetectorCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -19,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mGestureDetector: GestureDetectorCompat
     private lateinit var instance: ViewModelProvider.AndroidViewModelFactory
     private lateinit var calendarModel: CalendarModel
-    val handler = Handler()
+    private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,8 +86,10 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-    val calendarSyncer : Runnable = Runnable {
+    private val calendarSyncer : Runnable = Runnable {
         handler.post{
+            val myCalendarAdapter = MyCalendarAdapter(contentResolver, this)
+            myCalendarAdapter.getEvents()
             val makeText = Toast.makeText(this, "Syncing calendar events", Toast.LENGTH_SHORT)
             makeText.show()
         }
