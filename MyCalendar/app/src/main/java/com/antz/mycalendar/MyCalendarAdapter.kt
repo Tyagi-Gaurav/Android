@@ -9,16 +9,28 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import java.sql.Time
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MyCalendarAdapter(private val contentResolver: ContentResolver,
-                        private val activity: AppCompatActivity) {
+                        private val activity: AppCompatActivity,
+                        private val year : Int,
+                        private val month : Int)
+//,
+                        //private val startDateTimeStamp : String,
+//                        private val endDateTimeStamp : String)
+{
 
     private val EVENT_PROJECTION: Array<String> = arrayOf(
-            CalendarContract.Events.CALENDAR_ID,
-            CalendarContract.Events._ID,
-            CalendarContract.Events.ACCOUNT_NAME,
-            CalendarContract.Events.ACCOUNT_TYPE,
-            CalendarContract.Events.TITLE
+            CalendarContract.Events.CALENDAR_ID, //0
+            CalendarContract.Events._ID, //1
+            CalendarContract.Events.ACCOUNT_NAME, //2
+            CalendarContract.Events.ACCOUNT_TYPE, //3
+            CalendarContract.Events.TITLE, //4
+            CalendarContract.Events.DESCRIPTION, //5
+            CalendarContract.Events.DTSTART, //6
+            CalendarContract.Events.DTEND //7
     )
 
     companion object {
@@ -27,7 +39,8 @@ class MyCalendarAdapter(private val contentResolver: ContentResolver,
         private const val READ_CALENDAR_PERMISSION_STRING = android.Manifest.permission.READ_CALENDAR
     }
 
-    fun getEvents() {
+    fun getEvents() : List<EventModel> {
+        val eventList = mutableListOf<EventModel>()
         // Run query
         if (ContextCompat.checkSelfPermission(activity.applicationContext, READ_CALENDAR_PERMISSION_STRING) !=
                 PackageManager.PERMISSION_GRANTED) {
@@ -36,26 +49,55 @@ class MyCalendarAdapter(private val contentResolver: ContentResolver,
             )
         } else {
             val uri: Uri = CalendarContract.Events.CONTENT_URI
-            val selection: String = "((${CalendarContract.Events.ACCOUNT_NAME} = ?) AND (" +
+            val selection: String =
+                    "(" +
+                    "(${CalendarContract.Events.ACCOUNT_NAME} = ?) AND (" +
                     "${CalendarContract.Events.ACCOUNT_TYPE} = ?) AND (" +
-                    "${CalendarContract.Events.OWNER_ACCOUNT} = ?))"
-            val selectionArgs: Array<String> = arrayOf("chonku@gmail.com", "com.google", "chonku@gmail.com")
+                    "${CalendarContract.Events.DTSTART} >= ?) AND (" +
+                    "${CalendarContract.Events.DTEND} <= ?) AND (" +
+                    "${CalendarContract.Events.OWNER_ACCOUNT} = ?)" +
+                    ")"
+
+            val maxDaysInMonth = CalendarGenerator.getNumberOfDaysIn(month, year)
+            val startDate = GregorianCalendar(year, month, 1, 0, 0 , 0)
+            val endDate = GregorianCalendar(year, month, maxDaysInMonth, 23, 59, 59)
+            val selectionArgs: Array<String> = arrayOf("chonku@gmail.com",
+                                                       "com.google",
+                                                        startDate.timeInMillis.toString(),
+                                                        endDate.timeInMillis.toString(),
+                                                       "chonku@gmail.com")
             val cur: Cursor = contentResolver.query(uri, EVENT_PROJECTION, selection, selectionArgs, null)
-
-            while (cur.moveToNext()) {
-                // Get the field values
-                val calID: Long = cur.getLong(0)
-                val eventId: String = cur.getString(1)
-                val title: String = cur.getString(4)
-                // Do something with the values...
-
-                Log.d("MyCalendar", "$eventId, $title")
-            }
 
             Log.d("MyCalendar", "Cursor ${cur.count}")
 
+            while (cur.moveToNext()) {
+                //Get the field values
+                val eventId: String = getField(cur, 1)
+                val title: String = getField(cur, 4)
+                val dtStart: String = getDateTime(getField(cur, 6))
+                val dtEnd: String = getDateTime(getField(cur, 7))
+
+                //Do something with the values...
+                eventList.add(EventModel(eventId, title, dtStart, dtEnd))
+            }
+
             cur.close()
         }
+
+        return eventList
     }
 
+    private fun getField(cur : Cursor, index : Int) =
+            if (cur.getType(index) == Cursor.FIELD_TYPE_NULL)
+                "" else cur.getString(index)
+
+    private fun getDateTime(s: String): String {
+        return try {
+            val sdf = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+            val netDate = Date(s.toLong())
+            sdf.format(netDate)
+        } catch (e: Exception) {
+            ""
+        }
+    }
 }

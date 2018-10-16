@@ -88,10 +88,13 @@ class MainActivity : AppCompatActivity() {
 
     private val calendarSyncer : Runnable = Runnable {
         handler.post{
-            val myCalendarAdapter = MyCalendarAdapter(contentResolver, this)
-            myCalendarAdapter.getEvents()
-            val makeText = Toast.makeText(this, "Syncing calendar events", Toast.LENGTH_SHORT)
-            makeText.show()
+            val myCalendarAdapter = MyCalendarAdapter(contentResolver, this,
+                    calendarModel.year, calendarModel.month)
+            val events = myCalendarAdapter.getEvents()
+            Log.d("MyCalendar" , "${events.size}")
+            events.forEach {
+                Log.d("MyCalendar", "$it[0] $it[1] $$it[2] $$it[3]")
+            }
         }
     }
 

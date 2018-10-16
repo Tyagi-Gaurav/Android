@@ -14,6 +14,7 @@ import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.core.IsEqual
 import org.hamcrest.core.IsNot
 import org.hamcrest.core.IsNull
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -113,5 +114,10 @@ class CalendarTest {
         //then
         assertThat(packageInfo.requestedPermissions, IsNot(IsNull()))
         assertThat(packageInfo.requestedPermissions, IsEqual(arrayOf("android.permission.READ_CALENDAR")))
+    }
+
+    @Ignore
+    fun syncShouldGetEventsAndInsertIntoDB() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
