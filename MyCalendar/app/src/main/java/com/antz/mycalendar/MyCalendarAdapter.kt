@@ -4,23 +4,21 @@ import android.content.ContentResolver
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
+import android.os.AsyncTask
+import android.os.Handler
 import android.provider.CalendarContract
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import java.lang.ref.WeakReference
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MyCalendarAdapter(private val contentResolver: ContentResolver,
-                        private val activity: AppCompatActivity,
+class MyCalendarAdapter(private val activity: WeakReference<MainActivity>,
                         private val year : Int,
-                        private val month : Int)
-//,
-                        //private val startDateTimeStamp : String,
-//                        private val endDateTimeStamp : String)
-{
+                        private val month : Int) : Handler() {
 
     private val EVENT_PROJECTION: Array<String> = arrayOf(
             CalendarContract.Events.CALENDAR_ID, //0
@@ -36,15 +34,16 @@ class MyCalendarAdapter(private val contentResolver: ContentResolver,
     companion object {
         // The indices for the projection array above.
         private const val PERMISSION_REQUEST_CODE = 689
-        private const val READ_CALENDAR_PERMISSION_STRING = android.Manifest.permission.READ_CALENDAR
+        private const val READ_CALENDAR_PERMISSION_STRING =
+                android.Manifest.permission.READ_CALENDAR
     }
 
-    fun getEvents() : List<EventModel> {
+    fun getEvents() {
         val eventList = mutableListOf<EventModel>()
         // Run query
-        if (ContextCompat.checkSelfPermission(activity.applicationContext, READ_CALENDAR_PERMISSION_STRING) !=
+        if (ContextCompat.checkSelfPermission(activity.get()!!.applicationContext, READ_CALENDAR_PERMISSION_STRING) !=
                 PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity, arrayOf(READ_CALENDAR_PERMISSION_STRING),
+            ActivityCompat.requestPermissions(activity.get()!!, arrayOf(READ_CALENDAR_PERMISSION_STRING),
                     PERMISSION_REQUEST_CODE
             )
         } else {
@@ -66,7 +65,8 @@ class MyCalendarAdapter(private val contentResolver: ContentResolver,
                                                         startDate.timeInMillis.toString(),
                                                         endDate.timeInMillis.toString(),
                                                        "chonku@gmail.com")
-            val cur: Cursor = contentResolver.query(uri, EVENT_PROJECTION, selection, selectionArgs, null)
+            val cur: Cursor = (activity.get()!!.contentResolver as ContentResolver)
+                    .query(uri, EVENT_PROJECTION, selection, selectionArgs, null)
 
             Log.d("MyCalendar", "Cursor ${cur.count}")
 
@@ -84,7 +84,7 @@ class MyCalendarAdapter(private val contentResolver: ContentResolver,
             cur.close()
         }
 
-        return eventList
+        activity.get()!!.updateModel(eventList)
     }
 
     private fun getField(cur : Cursor, index : Int) =
@@ -93,7 +93,7 @@ class MyCalendarAdapter(private val contentResolver: ContentResolver,
 
     private fun getDateTime(s: String): String {
         return try {
-            val sdf = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+            val sdf = SimpleDateFormat("d/M/yyyy", Locale.getDefault())
             val netDate = Date(s.toLong())
             sdf.format(netDate)
         } catch (e: Exception) {

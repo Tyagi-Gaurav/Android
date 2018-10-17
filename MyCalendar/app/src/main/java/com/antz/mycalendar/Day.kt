@@ -9,6 +9,8 @@ data class Day(val dayOfWeek: Int,
                val inMonth : Boolean,
                val isToday : Boolean) {
 
+    fun toDateString() = "$date/${month+1}/$year"
+
     companion object {
         fun from(calendar : Calendar,
                  inMonth : Boolean = false,

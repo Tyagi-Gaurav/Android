@@ -1,11 +1,7 @@
 package com.antz.mycalendar
 
 import android.arch.lifecycle.ViewModelProvider
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Handler
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.support.v4.view.GestureDetectorCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -13,8 +9,8 @@ import android.view.GestureDetector
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
-import android.widget.TextView
-import android.widget.Toast
+import java.io.Serializable
+import java.lang.ref.WeakReference
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +18,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mGestureDetector: GestureDetectorCompat
     private lateinit var instance: ViewModelProvider.AndroidViewModelFactory
     private lateinit var calendarModel: CalendarModel
-    private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +42,9 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
             R.id.sync -> {
-                handler.post(calendarSyncer)
+                val myCalendarAdapter = MyCalendarAdapter(WeakReference(this),
+                        calendarModel.year, calendarModel.month)
+                myCalendarAdapter.post { myCalendarAdapter.getEvents() }
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -66,12 +63,12 @@ class MainActivity : AppCompatActivity() {
                 if (e2.x > e1.x) {
                     Log.d("MyMainActivity", "left2right swipe")
                     calendarModel.decrementMonthAndYear()
-                    openNewMonthFragment(MonthFragment())
+                    openNewMonthFragment()
                     Log.d("MyMainActivity", "${calendarModel.month}, ${calendarModel.year}")
                 } else {
                     Log.d("MyMainActivity", "right2left swipe")
                     calendarModel.incrementMonthAndYear()
-                    openNewMonthFragment(MonthFragment())
+                    openNewMonthFragment()
                     Log.d("MyMainActivity", "${calendarModel.month}, ${calendarModel.year}")
                 }
             }
@@ -79,23 +76,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun openNewMonthFragment(monthFragment: MonthFragment) {
+    fun openNewMonthFragment() {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.monthFragment, monthFragment)
+        transaction.replace(R.id.monthFragment, MonthFragment())
         transaction.addToBackStack(null)
         transaction.commit()
     }
 
-    private val calendarSyncer : Runnable = Runnable {
-        handler.post{
-            val myCalendarAdapter = MyCalendarAdapter(contentResolver, this,
-                    calendarModel.year, calendarModel.month)
-            val events = myCalendarAdapter.getEvents()
-            Log.d("MyCalendar" , "${events.size}")
-            events.forEach {
-                Log.d("MyCalendar", "$it[0] $it[1] $$it[2] $$it[3]")
-            }
-        }
+    fun updateModel(eventModel : List<EventModel>) {
+        val transaction = supportFragmentManager.beginTransaction()
+        val monthFragment = MonthFragment()
+        val bundle = Bundle()
+        bundle.putSerializable("eventModel", eventModel as Serializable)
+        monthFragment.arguments = bundle
+        transaction.replace(R.id.monthFragment, monthFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     companion object {

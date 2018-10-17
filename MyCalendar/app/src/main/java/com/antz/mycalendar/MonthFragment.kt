@@ -13,16 +13,15 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.TextView
-
 /**
  * A simple [Fragment] subclass.
  *
  */
 class MonthFragment : Fragment() {
-    private lateinit var instance : ViewModelProvider.AndroidViewModelFactory
-    private lateinit var calendarModel: CalendarModel
 
     private val calendarGenerator: CalendarGenerator = CalendarGenerator()
+    private lateinit var instance : ViewModelProvider.AndroidViewModelFactory
+    private lateinit var calendarModel: CalendarModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -62,11 +61,21 @@ class MonthFragment : Fragment() {
         val linearLayoutList = mutableListOf<LinearLayout>()
         var index = 0
 
+        val eventList = arguments?.getSerializable("eventModel") as? List<EventModel>
+        eventList?.forEach {
+            Log.d("MyCalendar" , "${it.description}, ${it.id}, ${it.startDate}, ${it.endDate}")
+        }
+
         for (ll in 1..days.size / 7) {
             val linearLayout = createLinearLayout()
             for (i in 1..7) {
                 val day = days[index++]
-                val color = if (day.inMonth) Color.BLACK else Color.GRAY
+                val color = if (day.inMonth) {
+                    if (isEventDay(day, eventList))
+                        Color.BLUE
+                    else
+                        Color.BLACK
+                } else Color.GRAY
                 val id = (((day.year * 100) + day.month) * 100) + day.date
                 linearLayout.addView(createTextView(day.date.toString(), color, day.isToday, id))
             }
@@ -75,6 +84,12 @@ class MonthFragment : Fragment() {
 
         return linearLayoutList
     }
+
+    private fun isEventDay(day: Day, eventList: List<EventModel>?): Boolean {
+        Log.d("MyCalendar", "Comparing ${day.toDateString()}")
+        return eventList?.any { e -> e.startDate == day.toDateString() } ?: false
+    }
+
 
     private fun createLinearLayout(): LinearLayout {
         val linearLayout = LinearLayout(this.context)
@@ -112,3 +127,4 @@ class MonthFragment : Fragment() {
         return textView
     }
 }
+
