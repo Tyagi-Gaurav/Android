@@ -19,7 +19,7 @@
         android:gravity="center"
         android:textSize="44sp" />
 
-    <!--<View style="@style/Divider"/>-->
+    <View style="@style/Divider"/>
 
     <LinearLayout
         android:id="@+id/month_detail_layout"

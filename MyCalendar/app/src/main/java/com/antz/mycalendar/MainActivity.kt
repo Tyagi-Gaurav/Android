@@ -31,15 +31,8 @@ class MainActivity : AppCompatActivity() {
         calendarModel.year = Calendar.getInstance().get(Calendar.YEAR)
         calendarModel.month = Calendar.getInstance().get(Calendar.MONTH)
 
-        //val toolbar = findViewById<Toolbar>(R.id.my_toolbar)
-        //setSupportActionBar(toolbar)
-        //val layoutParams = toolbar.layoutParams as LinearLayout.LayoutParams
-//        Log.d("MyCalendar", "Toolbar: ${layoutParams.leftMargin}")
-//        Log.d("MyCalendar", "Toolbar: ${layoutParams.rightMargin}")
-//        Log.d("MyCalendar", "Toolbar: ${layoutParams.topMargin}")
-//        Log.d("MyCalendar", "Toolbar: ${layoutParams.bottomMargin}")
-
-        //Log.d("MainActivity", "Support Action Bar is $supportActionBar")
+        val toolbar = findViewById<Toolbar>(R.id.my_toolbar)
+        setSupportActionBar(toolbar)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
