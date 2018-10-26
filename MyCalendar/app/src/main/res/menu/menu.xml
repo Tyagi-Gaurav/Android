@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/sync"
+        android:id="@+id/sync_action"
         android:title="@string/sync"
         android:icon="@drawable/baseline_sync_black_36"
         app:showAsAction="ifRoom" />

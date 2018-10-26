@@ -4,11 +4,13 @@ import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.support.v4.view.GestureDetectorCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.GestureDetector
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
+import android.widget.LinearLayout
 import java.io.Serializable
 import java.lang.ref.WeakReference
 import java.util.*
@@ -29,9 +31,15 @@ class MainActivity : AppCompatActivity() {
         calendarModel.year = Calendar.getInstance().get(Calendar.YEAR)
         calendarModel.month = Calendar.getInstance().get(Calendar.MONTH)
 
-        setSupportActionBar(findViewById(R.id.my_toolbar))
+        //val toolbar = findViewById<Toolbar>(R.id.my_toolbar)
+        //setSupportActionBar(toolbar)
+        //val layoutParams = toolbar.layoutParams as LinearLayout.LayoutParams
+//        Log.d("MyCalendar", "Toolbar: ${layoutParams.leftMargin}")
+//        Log.d("MyCalendar", "Toolbar: ${layoutParams.rightMargin}")
+//        Log.d("MyCalendar", "Toolbar: ${layoutParams.topMargin}")
+//        Log.d("MyCalendar", "Toolbar: ${layoutParams.bottomMargin}")
 
-        Log.d("MainActivity", "Support Action Bar is $supportActionBar")
+        //Log.d("MainActivity", "Support Action Bar is $supportActionBar")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -41,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
-            R.id.sync -> {
+            R.id.sync_action -> {
                 val myCalendarAdapter = MyCalendarAdapter(WeakReference(this),
                         calendarModel.year, calendarModel.month)
                 myCalendarAdapter.post { myCalendarAdapter.getEvents() }
@@ -78,6 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     fun openNewMonthFragment() {
         val transaction = supportFragmentManager.beginTransaction()
+        findViewById<LinearLayout>(R.id.monthFragment).removeAllViews()
         transaction.replace(R.id.monthFragment, MonthFragment())
         transaction.addToBackStack(null)
         transaction.commit()

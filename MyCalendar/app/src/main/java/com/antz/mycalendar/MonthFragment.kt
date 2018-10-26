@@ -43,8 +43,6 @@ class MonthFragment : Fragment() {
         val generateDaysLinearLayout = generateDaysLinearLayout(listOfDays)
         generateDaysLinearLayout.forEach{monthDetailLayout.addView(it)}
 
-        Log.d("Calendar", "${calendarModel.month}, ${calendarModel.year}")
-
         return monthView
     }
 
@@ -62,9 +60,6 @@ class MonthFragment : Fragment() {
         var index = 0
 
         val eventList = arguments?.getSerializable("eventModel") as? List<EventModel>
-        eventList?.forEach {
-            Log.d("MyCalendar" , "${it.description}, ${it.id}, ${it.startDate}, ${it.endDate}")
-        }
 
         for (ll in 1..days.size / 7) {
             val linearLayout = createLinearLayout()
@@ -86,7 +81,6 @@ class MonthFragment : Fragment() {
     }
 
     private fun isEventDay(day: Day, eventList: List<EventModel>?): Boolean {
-        Log.d("MyCalendar", "Comparing ${day.toDateString()}")
         return eventList?.any { e -> e.startDate == day.toDateString() } ?: false
     }
 

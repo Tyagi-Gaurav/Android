@@ -72,6 +72,7 @@ class MyCalendarAdapter(private val activity: WeakReference<MainActivity>,
 
             while (cur.moveToNext()) {
                 //Get the field values
+                val calendarId: String = getField(cur, 0)
                 val eventId: String = getField(cur, 1)
                 val title: String = getField(cur, 4)
                 val dtStart: String = getDateTime(getField(cur, 6))

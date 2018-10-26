@@ -9,13 +9,16 @@
     android:id="@+id/month_layout"
     app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior">
 
-    <include layout="@layout/toolbar" />
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.antz.mycalendar.MonthFragment"
-        android:id="@+id/monthFragment"/>
+        android:id="@+id/monthFragment" />
 
 </LinearLayout>
 

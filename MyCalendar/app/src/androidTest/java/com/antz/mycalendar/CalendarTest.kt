@@ -1,10 +1,13 @@
 package com.antz.mycalendar
 
+import android.content.ContentValues
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.net.Uri
+import android.provider.CalendarContract
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.swipeLeft
-import android.support.test.espresso.action.ViewActions.swipeRight
+import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
@@ -91,7 +94,6 @@ class CalendarTest {
         //given
         val calendar = Calendar.getInstance()
         calendar.time = Date()
-        val monthString = SimpleDateFormat("MMMM").format(calendar.time)
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
 
@@ -117,7 +119,32 @@ class CalendarTest {
     }
 
     @Ignore
-    fun syncShouldGetEventsAndInsertIntoDB() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun syncShouldGetEventsAndChangeColorOfDaysWithEventsToBlue() {
+        //given
+        val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
+        val contentResolver = InstrumentationRegistry.getInstrumentation().context.contentResolver
+        val uri: Uri = CalendarContract.Events.CONTENT_URI
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val id = (((year * 100) + month) * 100) + calendar.get(Calendar.DATE)
+
+        val packageInfo = targetContext.packageManager.getPackageInfo("com.antz.mycalendar", PackageManager.GET_PERMISSIONS)
+        //packageInfo.requestedPermissions
+
+        val contentValues = ContentValues()
+        contentValues.put("dtstart", System.currentTimeMillis()/1000)
+        contentValues.put("calendar_id", 1)
+        contentValues.put("account_name", "chonku@gmail.com")
+        contentValues.put("account_type", "com.google")
+        contentValues.put("owner_account", "chonku@gmail.com")
+
+            contentResolver?.insert(uri, contentValues)
+
+        //then
+        onView(withId(R.id.sync_action))
+                .perform(click())
+                .check(matches(withText(containsString("$id"))))
+                .check(matches(hasTextColor(Color.BLUE)))
     }
 }
